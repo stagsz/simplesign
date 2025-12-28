@@ -8,20 +8,20 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "SimpleSign - E-signatures for Small Business",
+  title: "SimpleSign - E-signaturer för småföretag",
   description:
-    "Simple, transparent e-signature solution for Nordic small businesses. No hidden fees. No per-user pricing. Cancel anytime.",
+    "Enkel och transparent e-signaturlösning för nordiska småföretag. Inga dolda avgifter. Inget pris per användare. Avsluta när du vill.",
   keywords: [
-    "e-signature",
-    "digital signature",
-    "electronic signature",
-    "docusign alternative",
     "e-signatur",
     "digital signatur",
+    "elektronisk signatur",
+    "docusign alternativ",
+    "signera dokument online",
+    "avtal signera",
   ],
   openGraph: {
-    title: "SimpleSign - E-signatures for Small Business",
-    description: "No hidden fees. No BS. Just simple e-signatures.",
+    title: "SimpleSign - E-signaturer för småföretag",
+    description: "Inga dolda avgifter. Inga krångel. Bara enkla e-signaturer.",
     type: "website",
   },
 };
