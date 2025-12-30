@@ -17,16 +17,25 @@ export async function GET(
       .single()
 
     if (docError || !document) {
-      return NextResponse.json({ error: 'Document not found' }, { status: 404 })
+      console.error('Document query error:', docError)
+      return NextResponse.json({
+        error: 'Document not found',
+        details: docError?.message,
+        id
+      }, { status: 404 })
     }
 
     // Extract file path from URL
     // URL format: https://xxx.supabase.co/storage/v1/object/public/documents/user_id/filename.pdf
     const urlParts = document.file_url.split('/documents/')
     if (urlParts.length < 2) {
-      return NextResponse.json({ error: 'Invalid file URL' }, { status: 400 })
+      return NextResponse.json({
+        error: 'Invalid file URL format',
+        file_url: document.file_url
+      }, { status: 400 })
     }
     const filePath = urlParts[1]
+    console.log('Downloading file:', filePath)
 
     // Download file from storage
     const { data: fileData, error: downloadError } = await supabase.storage
@@ -35,7 +44,11 @@ export async function GET(
 
     if (downloadError || !fileData) {
       console.error('Download error:', downloadError)
-      return NextResponse.json({ error: 'Failed to download file' }, { status: 500 })
+      return NextResponse.json({
+        error: 'Failed to download file',
+        details: downloadError?.message,
+        filePath
+      }, { status: 500 })
     }
 
     // Return PDF with proper headers
