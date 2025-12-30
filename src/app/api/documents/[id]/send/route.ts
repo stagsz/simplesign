@@ -138,12 +138,19 @@ export async function POST(
       console.warn('Some emails failed to send:', failedEmails)
     }
 
+    // Return signing URLs so user can share them manually if email fails
+    const signingUrls = createdSigners.map(s => ({
+      email: s.email,
+      name: s.name,
+      signingUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://app-seven-smoky.vercel.app'}/sign/${s.access_token}`
+    }))
+
     return NextResponse.json({
       success: true,
-      signers: createdSigners.map(s => ({
-        email: s.email,
-        signingUrl: `/sign/${s.access_token}`
-      }))
+      signers: signingUrls,
+      message: failedEmails.length > 0
+        ? 'Dokumentet skickades men vissa mail kunde inte levereras. Dela länkarna manuellt.'
+        : 'Dokumentet har skickats för signering!'
     })
   } catch (error) {
     console.error('Send error:', error)

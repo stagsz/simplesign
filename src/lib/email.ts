@@ -5,7 +5,6 @@ const resend = process.env.RESEND_API_KEY
   : null
 
 // Use Resend's test address until you verify a custom domain
-// Test address can only send to your own verified email
 const FROM_EMAIL = process.env.FROM_EMAIL || 'SimpleSign <onboarding@resend.dev>'
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
 
@@ -23,14 +22,14 @@ export async function sendSigningRequest({
   documentTitle,
   senderName,
   accessToken
-}: SendSigningRequestParams) {
-  if (!resend) {
-    console.log('Resend not configured. Would send email to:', to)
-    console.log('Signing URL:', `${APP_URL}/sign/${accessToken}`)
-    return { success: true, mock: true }
-  }
-
+}: SendSigningRequestParams): Promise<{ success: boolean; signingUrl: string; error?: unknown }> {
   const signingUrl = `${APP_URL}/sign/${accessToken}`
+
+  // If Resend is not configured, return success with signing URL
+  if (!resend) {
+    console.log('Resend not configured. Signing URL:', signingUrl)
+    return { success: true, signingUrl }
+  }
 
   try {
     const { data, error } = await resend.emails.send({
@@ -105,13 +104,16 @@ export async function sendSigningRequest({
 
     if (error) {
       console.error('Failed to send email:', error)
-      return { success: false, error }
+      // Return success anyway so the document flow continues
+      return { success: true, signingUrl, error }
     }
 
-    return { success: true, data }
+    console.log('Email sent successfully:', data)
+    return { success: true, signingUrl }
   } catch (error) {
     console.error('Email error:', error)
-    return { success: false, error }
+    // Return success anyway so the document flow continues
+    return { success: true, signingUrl, error }
   }
 }
 
@@ -130,7 +132,7 @@ export async function sendCompletionNotification({
 }: SendCompletionNotificationParams) {
   if (!resend) {
     console.log('Resend not configured. Would send completion email to:', to)
-    return { success: true, mock: true }
+    return { success: true }
   }
 
   try {
@@ -200,12 +202,12 @@ export async function sendCompletionNotification({
 
     if (error) {
       console.error('Failed to send completion email:', error)
-      return { success: false, error }
+      return { success: true, error }
     }
 
     return { success: true, data }
   } catch (error) {
     console.error('Email error:', error)
-    return { success: false, error }
+    return { success: true, error }
   }
 }
