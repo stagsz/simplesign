@@ -116,10 +116,28 @@ export default function DocumentEditPage({ params }: { params: Promise<{ id: str
     setError(null)
 
     try {
+      // Clean the data to ensure it's serializable
+      const cleanSigners = signers.map(s => ({
+        id: s.id,
+        email: s.email,
+        name: s.name
+      }))
+
+      const cleanFields = fields.map(f => ({
+        id: f.id,
+        type: f.type,
+        x: f.x,
+        y: f.y,
+        width: f.width,
+        height: f.height,
+        page: f.page,
+        signerId: f.signerId
+      }))
+
       const response = await fetch(`/api/documents/${id}/send`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ signers, fields })
+        body: JSON.stringify({ signers: cleanSigners, fields: cleanFields })
       })
 
       const data = await response.json()
@@ -130,6 +148,7 @@ export default function DocumentEditPage({ params }: { params: Promise<{ id: str
 
       router.push(`/documents/${id}`)
     } catch (err) {
+      console.error('Send error:', err)
       setError(err instanceof Error ? err.message : 'Något gick fel')
       setSending(false)
     }
