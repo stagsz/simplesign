@@ -49,11 +49,14 @@ export default function Home() {
               <a href="#priser" className="text-sm text-white/60 transition hover:text-white">
                 Priser
               </a>
+              <a href="/auth/login" className="text-sm text-white/60 transition hover:text-white">
+                Logga in
+              </a>
               <a
-                href="#waitlist"
-                className="group flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-medium text-black transition hover:bg-white/90"
+                href="/auth/signup"
+                className="group flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-2 text-sm font-medium text-white transition hover:opacity-90"
               >
-                Få tidig tillgång
+                Kom igång gratis
                 <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
               </a>
             </div>
