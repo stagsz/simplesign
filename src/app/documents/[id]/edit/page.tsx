@@ -337,7 +337,7 @@ export default function DocumentEditPage({ params }: { params: Promise<{ id: str
         <div className="flex-1 overflow-hidden p-4">
           {document && (
             <PDFViewer
-              url={document.file_url}
+              url={`/api/documents/${id}/file`}
               onPageChange={(page) => setCurrentPage(page)}
               onDocumentLoad={() => {}}
               renderOverlay={(page, s) => (

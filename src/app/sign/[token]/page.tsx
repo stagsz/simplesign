@@ -288,7 +288,7 @@ export default function SigningPage({ params }: { params: Promise<{ token: strin
         <div className="flex-1 overflow-hidden p-4">
           {signer && (
             <PDFViewer
-              url={signer.document.file_url}
+              url={`/api/sign/${token}/file`}
               onPageChange={(page) => setCurrentPage(page)}
               renderOverlay={(page, scale) => (
                 <div className="absolute inset-0">
