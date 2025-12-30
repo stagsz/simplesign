@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { sendSigningRequest } from '@/lib/email'
 
 export async function POST(
   request: NextRequest,
@@ -17,7 +18,7 @@ export async function POST(
     // Verify document ownership
     const { data: document } = await supabase
       .from('documents')
-      .select('id, user_id, status')
+      .select('id, user_id, status, title')
       .eq('id', id)
       .single()
 
@@ -119,9 +120,23 @@ export async function POST(
       metadata: { signers: createdSigners.map(s => s.email) }
     })
 
-    // TODO: Send emails to signers using Resend
-    // For now, just return success
-    // In production, you would send emails here with signing links
+    // Send emails to signers
+    const emailResults = await Promise.all(
+      createdSigners.map(signer =>
+        sendSigningRequest({
+          to: signer.email,
+          signerName: signer.name || signer.email.split('@')[0],
+          documentTitle: document.title,
+          senderName: user.email?.split('@')[0] || 'Någon',
+          accessToken: signer.access_token
+        })
+      )
+    )
+
+    const failedEmails = emailResults.filter(r => !r.success)
+    if (failedEmails.length > 0) {
+      console.warn('Some emails failed to send:', failedEmails)
+    }
 
     return NextResponse.json({
       success: true,

@@ -1,0 +1,96 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@/lib/supabase/server'
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ token: string }> }
+) {
+  try {
+    const { token } = await params
+    const supabase = await createClient()
+
+    // Find signer by access token
+    const { data: signer, error: signerError } = await supabase
+      .from('signers')
+      .select(`
+        id,
+        name,
+        email,
+        status,
+        document_id
+      `)
+      .eq('access_token', token)
+      .single()
+
+    if (signerError || !signer) {
+      return NextResponse.json(
+        { error: 'Ogiltig eller utgången länk' },
+        { status: 404 }
+      )
+    }
+
+    // Get document
+    const { data: document, error: docError } = await supabase
+      .from('documents')
+      .select('id, title, file_url, status')
+      .eq('id', signer.document_id)
+      .single()
+
+    if (docError || !document) {
+      return NextResponse.json(
+        { error: 'Dokumentet hittades inte' },
+        { status: 404 }
+      )
+    }
+
+    if (document.status === 'expired') {
+      return NextResponse.json(
+        { error: 'Dokumentet har utgått' },
+        { status: 410 }
+      )
+    }
+
+    // Get signature fields for this signer
+    const { data: fields } = await supabase
+      .from('signature_fields')
+      .select('id, type, page, x, y, width, height, value')
+      .eq('document_id', signer.document_id)
+      .eq('signer_id', signer.id)
+      .order('page', { ascending: true })
+
+    // Log document view if not already signed
+    if (signer.status === 'pending') {
+      await supabase
+        .from('signers')
+        .update({ status: 'viewed' })
+        .eq('id', signer.id)
+
+      await supabase.from('audit_logs').insert({
+        document_id: signer.document_id,
+        signer_id: signer.id,
+        action: 'document_viewed',
+        ip_address: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
+        user_agent: request.headers.get('user-agent')
+      })
+    }
+
+    return NextResponse.json({
+      id: signer.id,
+      name: signer.name,
+      email: signer.email,
+      status: signer.status,
+      document: {
+        id: document.id,
+        title: document.title,
+        file_url: document.file_url
+      },
+      fields: fields || []
+    })
+  } catch (error) {
+    console.error('Sign page error:', error)
+    return NextResponse.json(
+      { error: 'Internt serverfel' },
+      { status: 500 }
+    )
+  }
+}
