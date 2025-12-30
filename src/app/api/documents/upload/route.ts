@@ -26,16 +26,27 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'File size must be less than 10MB' }, { status: 400 })
     }
 
-    // Check user's document limit
-    const { data: userData } = await supabase
+    // Check user's document limit (skip if user doesn't exist in users table yet)
+    const { data: userData, error: userError } = await supabase
       .from('users')
       .select('documents_used, documents_limit')
       .eq('id', user.id)
       .single()
 
-    if (userData && userData.documents_used >= userData.documents_limit) {
+    // If user doesn't exist in users table, create them
+    if (userError || !userData) {
+      console.log('User not found in users table, creating...')
+      await supabase.from('users').insert({
+        id: user.id,
+        email: user.email,
+        name: user.user_metadata?.name || user.email?.split('@')[0],
+        plan: 'free',
+        documents_limit: 3,
+        documents_used: 0
+      }).select().single()
+    } else if (userData.documents_used >= userData.documents_limit) {
       return NextResponse.json({
-        error: 'Document limit reached. Please upgrade your plan.'
+        error: 'Dokumentgräns nådd. Uppgradera din plan.'
       }, { status: 403 })
     }
 
