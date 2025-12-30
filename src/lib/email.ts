@@ -4,7 +4,9 @@ const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
   : null
 
-const FROM_EMAIL = process.env.FROM_EMAIL || 'SimpleSign <noreply@simplesign.se>'
+// Use Resend's test address until you verify a custom domain
+// Test address can only send to your own verified email
+const FROM_EMAIL = process.env.FROM_EMAIL || 'SimpleSign <onboarding@resend.dev>'
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
 
 interface SendSigningRequestParams {
