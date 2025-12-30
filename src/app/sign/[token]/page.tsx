@@ -126,10 +126,10 @@ export default function SigningPage({ params }: { params: Promise<{ token: strin
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-black">
+      <div className="flex min-h-screen items-center justify-center bg-[#0A0A0B]">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="h-8 w-8 animate-spin text-purple-400" />
-          <p className="text-gray-400">Laddar dokument...</p>
+          <p className="text-white/60">Laddar dokument...</p>
         </div>
       </div>
     )
@@ -137,11 +137,13 @@ export default function SigningPage({ params }: { params: Promise<{ token: strin
 
   if (error && !signer) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-black">
-        <div className="text-center max-w-md px-4">
+      <div className="flex min-h-screen items-center justify-center bg-[#0A0A0B]">
+        <div className="pointer-events-none fixed top-0 left-1/4 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-purple-500/20 blur-[120px]" />
+        <div className="pointer-events-none fixed top-20 right-1/4 h-[400px] w-[400px] translate-x-1/2 rounded-full bg-blue-500/20 blur-[120px]" />
+        <div className="relative text-center max-w-md px-4">
           <AlertCircle className="mx-auto h-12 w-12 text-red-400 mb-4" />
           <h1 className="text-xl font-semibold text-white mb-2">Kunde inte ladda dokumentet</h1>
-          <p className="text-gray-400">{error}</p>
+          <p className="text-white/60">{error}</p>
         </div>
       </div>
     )
@@ -149,16 +151,18 @@ export default function SigningPage({ params }: { params: Promise<{ token: strin
 
   if (completed) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-black">
-        <div className="text-center max-w-md px-4">
+      <div className="flex min-h-screen items-center justify-center bg-[#0A0A0B]">
+        <div className="pointer-events-none fixed top-0 left-1/4 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-purple-500/20 blur-[120px]" />
+        <div className="pointer-events-none fixed top-20 right-1/4 h-[400px] w-[400px] translate-x-1/2 rounded-full bg-blue-500/20 blur-[120px]" />
+        <div className="relative text-center max-w-md px-4">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-500/20 mb-6">
             <CheckCircle className="h-8 w-8 text-green-400" />
           </div>
           <h1 className="text-2xl font-semibold text-white mb-2">Tack för din signatur!</h1>
-          <p className="text-gray-400 mb-6">
+          <p className="text-white/60 mb-6">
             Dokumentet har signerats. Du kommer att få en kopia via e-post.
           </p>
-          <div className="inline-flex items-center gap-2 rounded-lg bg-gray-900 border border-gray-800 px-4 py-2 text-sm text-gray-400">
+          <div className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/60">
             <FileSignature className="h-4 w-4" />
             {signer?.document.title}
           </div>
@@ -169,44 +173,47 @@ export default function SigningPage({ params }: { params: Promise<{ token: strin
 
   if (signer?.status === 'signed') {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-black">
-        <div className="text-center max-w-md px-4">
+      <div className="flex min-h-screen items-center justify-center bg-[#0A0A0B]">
+        <div className="pointer-events-none fixed top-0 left-1/4 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-purple-500/20 blur-[120px]" />
+        <div className="pointer-events-none fixed top-20 right-1/4 h-[400px] w-[400px] translate-x-1/2 rounded-full bg-blue-500/20 blur-[120px]" />
+        <div className="relative text-center max-w-md px-4">
           <CheckCircle className="mx-auto h-12 w-12 text-green-400 mb-4" />
           <h1 className="text-xl font-semibold text-white mb-2">Redan signerat</h1>
-          <p className="text-gray-400">Du har redan signerat detta dokument.</p>
+          <p className="text-white/60">Du har redan signerat detta dokument.</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-[#0A0A0B] text-white">
+      {/* Gradient orbs */}
+      <div className="pointer-events-none fixed top-0 left-1/4 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-purple-500/20 blur-[120px]" />
+      <div className="pointer-events-none fixed top-20 right-1/4 h-[400px] w-[400px] translate-x-1/2 rounded-full bg-blue-500/20 blur-[120px]" />
+
       {/* Header */}
-      <header className="border-b border-gray-800">
+      <header className="relative border-b border-white/10 bg-[#0A0A0B]/80 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
-          <div className="flex items-center gap-2">
-            <FileSignature className="h-6 w-6 text-purple-500" />
-            <span className="font-semibold text-white">SimpleSign</span>
-          </div>
-          <div className="text-sm text-gray-400">
+          <span className="text-lg font-semibold tracking-tight">SimpleSign</span>
+          <div className="text-sm text-white/60">
             Signerar som: <span className="text-white">{signer?.name || signer?.email}</span>
           </div>
         </div>
       </header>
 
-      <div className="flex h-[calc(100vh-4rem)]">
+      <div className="relative flex h-[calc(100vh-4rem)]">
         {/* Sidebar */}
-        <div className="w-80 border-r border-gray-800 overflow-y-auto p-4">
+        <div className="w-80 border-r border-white/10 overflow-y-auto p-4 bg-[#0A0A0B]/50 backdrop-blur-sm">
           <div className="mb-6">
-            <h2 className="text-lg font-semibold text-white mb-1">{signer?.document.title}</h2>
-            <p className="text-sm text-gray-400">
+            <h2 className="text-lg font-semibold mb-1">{signer?.document.title}</h2>
+            <p className="text-sm text-white/60">
               Granska dokumentet och signera på markerade ställen.
             </p>
           </div>
 
           {/* Field Checklist */}
           <div className="space-y-2">
-            <h3 className="text-sm font-medium text-gray-400 mb-3">Fält att fylla i</h3>
+            <h3 className="text-sm font-medium text-white/50 mb-3">Fält att fylla i</h3>
             {signer?.fields.map(field => {
               const isFilled = !!fieldValues[field.id]
               const fieldLabel = field.type === 'signature' ? 'Signatur' :
@@ -217,26 +224,26 @@ export default function SigningPage({ params }: { params: Promise<{ token: strin
                 <button
                   key={field.id}
                   onClick={() => handleFieldClick(field.id, field.type)}
-                  className={`w-full flex items-center gap-3 rounded-lg border p-3 text-left transition-colors ${
+                  className={`w-full flex items-center gap-3 rounded-xl border p-3 text-left transition ${
                     isFilled
                       ? 'border-green-500/50 bg-green-500/10'
-                      : 'border-gray-700 bg-gray-900 hover:bg-gray-800'
+                      : 'border-white/10 bg-white/5 hover:bg-white/10'
                   }`}
                 >
                   <div className={`flex h-6 w-6 items-center justify-center rounded-full ${
-                    isFilled ? 'bg-green-500' : 'bg-gray-700'
+                    isFilled ? 'bg-green-500' : 'bg-white/10'
                   }`}>
                     {isFilled ? (
                       <CheckCircle className="h-4 w-4 text-white" />
                     ) : (
-                      <span className="text-xs text-gray-400">{field.page}</span>
+                      <span className="text-xs text-white/50">{field.page}</span>
                     )}
                   </div>
                   <div>
                     <p className={`text-sm font-medium ${isFilled ? 'text-green-400' : 'text-white'}`}>
                       {fieldLabel}
                     </p>
-                    <p className="text-xs text-gray-500">Sida {field.page}</p>
+                    <p className="text-xs text-white/40">Sida {field.page}</p>
                   </div>
                 </button>
               )
@@ -246,7 +253,7 @@ export default function SigningPage({ params }: { params: Promise<{ token: strin
           {/* Submit Button */}
           <div className="mt-6">
             {error && (
-              <div className="mb-4 rounded-lg bg-red-500/10 border border-red-500/20 p-3">
+              <div className="mb-4 rounded-xl bg-red-500/10 border border-red-500/20 p-3">
                 <p className="text-sm text-red-400">{error}</p>
               </div>
             )}
@@ -254,7 +261,7 @@ export default function SigningPage({ params }: { params: Promise<{ token: strin
             <button
               onClick={handleSubmit}
               disabled={!allFieldsFilled || submitting}
-              className="w-full flex items-center justify-center gap-2 rounded-lg bg-purple-600 px-4 py-3 font-medium text-white hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-3 font-medium text-white hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition"
             >
               {submitting ? (
                 <>
@@ -270,7 +277,7 @@ export default function SigningPage({ params }: { params: Promise<{ token: strin
             </button>
 
             {!allFieldsFilled && (
-              <p className="mt-2 text-center text-xs text-gray-500">
+              <p className="mt-2 text-center text-xs text-white/40">
                 Fyll i alla fält för att kunna signera
               </p>
             )}

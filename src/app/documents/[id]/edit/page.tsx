@@ -137,7 +137,7 @@ export default function DocumentEditPage({ params }: { params: Promise<{ id: str
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-black">
+      <div className="flex min-h-screen items-center justify-center bg-[#0A0A0B]">
         <Loader2 className="h-8 w-8 animate-spin text-purple-400" />
       </div>
     )
@@ -145,7 +145,7 @@ export default function DocumentEditPage({ params }: { params: Promise<{ id: str
 
   if (error && !document) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-black">
+      <div className="flex min-h-screen items-center justify-center bg-[#0A0A0B]">
         <div className="text-center">
           <p className="text-red-400 mb-4">{error}</p>
           <Link href="/dashboard" className="text-purple-400 hover:underline">
@@ -157,29 +157,31 @@ export default function DocumentEditPage({ params }: { params: Promise<{ id: str
   }
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-[#0A0A0B] text-white">
+      {/* Gradient orbs */}
+      <div className="pointer-events-none fixed top-0 left-1/4 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-purple-500/20 blur-[120px]" />
+      <div className="pointer-events-none fixed top-20 right-1/4 h-[400px] w-[400px] translate-x-1/2 rounded-full bg-blue-500/20 blur-[120px]" />
+
       {/* Header */}
-      <header className="border-b border-gray-800">
+      <header className="relative border-b border-white/10 bg-[#0A0A0B]/80 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-[1600px] items-center justify-between px-4">
           <div className="flex items-center gap-4">
             <Link
               href="/dashboard"
-              className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
+              className="flex items-center gap-2 text-white/60 hover:text-white transition"
             >
               <ArrowLeft className="h-5 w-5" />
             </Link>
-            <div className="flex items-center gap-2">
-              <FileSignature className="h-6 w-6 text-purple-500" />
-              <span className="font-semibold text-white truncate max-w-[200px]">
-                {document?.title}
-              </span>
-            </div>
+            <div className="h-6 w-px bg-white/10" />
+            <span className="font-semibold truncate max-w-[200px]">
+              {document?.title}
+            </span>
           </div>
 
           <button
             onClick={handleSend}
             disabled={sending || signers.length === 0 || fields.length === 0}
-            className="flex items-center gap-2 rounded-lg bg-purple-600 px-4 py-2 font-medium text-white hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-2 font-medium text-white hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition"
           >
             {sending ? (
               <>
@@ -196,29 +198,29 @@ export default function DocumentEditPage({ params }: { params: Promise<{ id: str
         </div>
       </header>
 
-      <div className="flex h-[calc(100vh-4rem)]">
+      <div className="relative flex h-[calc(100vh-4rem)]">
         {/* Sidebar */}
-        <div className="w-80 border-r border-gray-800 overflow-y-auto p-4">
+        <div className="w-80 border-r border-white/10 overflow-y-auto p-4 bg-[#0A0A0B]/50 backdrop-blur-sm">
           {/* Signers */}
           <div className="mb-6">
-            <h3 className="text-sm font-medium text-gray-400 mb-3">Mottagare</h3>
+            <h3 className="text-sm font-medium text-white/50 mb-3">Mottagare</h3>
 
             {signers.length === 0 ? (
-              <p className="text-sm text-gray-500 mb-3">Inga mottagare tillagda</p>
+              <p className="text-sm text-white/40 mb-3">Inga mottagare tillagda</p>
             ) : (
               <div className="space-y-2 mb-3">
                 {signers.map(signer => (
                   <div
                     key={signer.id}
-                    className="flex items-center justify-between rounded-lg bg-gray-900 border border-gray-800 p-3"
+                    className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-3"
                   >
                     <div className="min-w-0">
-                      <p className="text-sm font-medium text-white truncate">{signer.name}</p>
-                      <p className="text-xs text-gray-400 truncate">{signer.email}</p>
+                      <p className="text-sm font-medium truncate">{signer.name}</p>
+                      <p className="text-xs text-white/50 truncate">{signer.email}</p>
                     </div>
                     <button
                       onClick={() => removeSigner(signer.id)}
-                      className="p-1 text-gray-500 hover:text-red-400 transition-colors"
+                      className="p-1 text-white/40 hover:text-red-400 transition"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
@@ -233,19 +235,19 @@ export default function DocumentEditPage({ params }: { params: Promise<{ id: str
                 value={newSignerEmail}
                 onChange={(e) => setNewSignerEmail(e.target.value)}
                 placeholder="E-postadress"
-                className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-white/40 focus:border-purple-500 focus:outline-none transition"
               />
               <input
                 type="text"
                 value={newSignerName}
                 onChange={(e) => setNewSignerName(e.target.value)}
                 placeholder="Namn (valfritt)"
-                className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-white/40 focus:border-purple-500 focus:outline-none transition"
               />
               <button
                 onClick={addSigner}
                 disabled={!newSignerEmail.trim()}
-                className="w-full flex items-center justify-center gap-2 rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="w-full flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition"
               >
                 <Plus className="h-4 w-4" />
                 Lägg till mottagare
@@ -255,7 +257,7 @@ export default function DocumentEditPage({ params }: { params: Promise<{ id: str
 
           {/* Field Tools */}
           <div>
-            <h3 className="text-sm font-medium text-gray-400 mb-3">Fält att placera</h3>
+            <h3 className="text-sm font-medium text-white/50 mb-3">Fält att placera</h3>
 
             <div className="space-y-2">
               {fieldTools.map(tool => {
@@ -268,11 +270,11 @@ export default function DocumentEditPage({ params }: { params: Promise<{ id: str
                     onClick={() => setActiveFieldType(isActive ? null : tool.type)}
                     disabled={signers.length === 0}
                     className={`
-                      w-full flex items-center gap-3 rounded-lg border px-3 py-2 text-sm transition-colors
+                      w-full flex items-center gap-3 rounded-xl border px-3 py-2 text-sm transition
                       disabled:opacity-50 disabled:cursor-not-allowed
                       ${isActive
                         ? 'border-purple-500 bg-purple-500/20 text-white'
-                        : 'border-gray-700 bg-gray-900 text-gray-300 hover:bg-gray-800'
+                        : 'border-white/10 bg-white/5 text-white/70 hover:bg-white/10'
                       }
                     `}
                   >
@@ -289,7 +291,7 @@ export default function DocumentEditPage({ params }: { params: Promise<{ id: str
             </div>
 
             {signers.length === 0 && (
-              <p className="mt-2 text-xs text-gray-500">
+              <p className="mt-2 text-xs text-white/40">
                 Lägg till en mottagare först
               </p>
             )}
@@ -298,22 +300,22 @@ export default function DocumentEditPage({ params }: { params: Promise<{ id: str
           {/* Field Summary */}
           {fields.length > 0 && (
             <div className="mt-6">
-              <h3 className="text-sm font-medium text-gray-400 mb-3">
+              <h3 className="text-sm font-medium text-white/50 mb-3">
                 Placerade fält ({fields.length})
               </h3>
               <div className="space-y-1">
                 {fields.map(field => (
                   <div
                     key={field.id}
-                    className="flex items-center justify-between rounded-lg bg-gray-900/50 px-3 py-2 text-sm"
+                    className="flex items-center justify-between rounded-xl bg-white/5 px-3 py-2 text-sm"
                   >
-                    <span className="text-gray-300">
+                    <span className="text-white/70">
                       {field.type === 'signature' ? 'Signatur' : field.type === 'initial' ? 'Initial' : 'Datum'}
-                      <span className="text-gray-500 ml-1">s.{field.page}</span>
+                      <span className="text-white/40 ml-1">s.{field.page}</span>
                     </span>
                     <button
                       onClick={() => handleFieldDelete(field.id)}
-                      className="text-gray-500 hover:text-red-400 transition-colors"
+                      className="text-white/40 hover:text-red-400 transition"
                     >
                       <Trash2 className="h-3 w-3" />
                     </button>
@@ -325,7 +327,7 @@ export default function DocumentEditPage({ params }: { params: Promise<{ id: str
 
           {/* Error */}
           {error && (
-            <div className="mt-4 rounded-lg bg-red-500/10 border border-red-500/20 p-3">
+            <div className="mt-4 rounded-xl bg-red-500/10 border border-red-500/20 p-3">
               <p className="text-sm text-red-400">{error}</p>
             </div>
           )}

@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import { FileSignature, ArrowLeft, FileText, Clock, CheckCircle, Mail, ExternalLink, Copy } from 'lucide-react'
+import { ArrowLeft, FileText, Clock, CheckCircle, Mail, ExternalLink, Copy } from 'lucide-react'
 
 export default async function DocumentPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -52,28 +52,31 @@ export default async function DocumentPage({ params }: { params: Promise<{ id: s
   }
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-[#0A0A0B] text-white">
+      {/* Gradient orbs */}
+      <div className="pointer-events-none fixed top-0 left-1/4 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-purple-500/20 blur-[120px]" />
+      <div className="pointer-events-none fixed top-20 right-1/4 h-[400px] w-[400px] translate-x-1/2 rounded-full bg-blue-500/20 blur-[120px]" />
+
       {/* Header */}
-      <header className="border-b border-gray-800">
+      <header className="relative border-b border-white/10 bg-[#0A0A0B]/80 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-4">
             <Link
               href="/dashboard"
-              className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
+              className="flex items-center gap-2 text-white/60 hover:text-white transition"
             >
               <ArrowLeft className="h-5 w-5" />
               <span className="text-sm">Tillbaka</span>
             </Link>
-            <div className="h-6 w-px bg-gray-800" />
-            <div className="flex items-center gap-2">
-              <FileSignature className="h-6 w-6 text-purple-500" />
-              <span className="font-semibold text-white">SimpleSign</span>
-            </div>
+            <div className="h-6 w-px bg-white/10" />
+            <Link href="/" className="text-lg font-semibold tracking-tight">
+              SimpleSign
+            </Link>
           </div>
         </div>
       </header>
 
-      <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+      <main className="relative mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Document Header */}
         <div className="flex items-start justify-between mb-8">
           <div>
@@ -96,14 +99,14 @@ export default async function DocumentPage({ params }: { params: Promise<{ id: s
 
         {/* Actions */}
         {document.status === 'draft' && (
-          <div className="mb-8 rounded-xl bg-gray-900/50 border border-gray-800 p-6">
-            <h2 className="text-lg font-medium text-white mb-2">Nästa steg</h2>
-            <p className="text-gray-400 mb-4">
+          <div className="mb-8 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+            <h2 className="text-lg font-medium mb-2">Nästa steg</h2>
+            <p className="text-white/60 mb-4">
               Lägg till signaturfält och mottagare för att skicka dokumentet för signering.
             </p>
             <Link
               href={`/documents/${id}/edit`}
-              className="inline-flex items-center gap-2 rounded-lg bg-purple-600 px-4 py-2 font-medium text-white hover:bg-purple-700 transition-colors"
+              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-2 font-medium text-white hover:opacity-90 transition"
             >
               Fortsätt redigera
               <ExternalLink className="h-4 w-4" />
@@ -114,20 +117,20 @@ export default async function DocumentPage({ params }: { params: Promise<{ id: s
         {/* Signers */}
         {signers && signers.length > 0 && (
           <div className="mb-8">
-            <h2 className="text-lg font-medium text-white mb-4">Mottagare</h2>
+            <h2 className="text-lg font-medium mb-4">Mottagare</h2>
             <div className="space-y-3">
               {signers.map((signer) => (
                 <div
                   key={signer.id}
-                  className="flex items-center justify-between rounded-xl bg-gray-900/50 border border-gray-800 p-4"
+                  className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-800">
-                      <Mail className="h-5 w-5 text-gray-400" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10">
+                      <Mail className="h-5 w-5 text-white/60" />
                     </div>
                     <div>
-                      <p className="font-medium text-white">{signer.name || signer.email}</p>
-                      <p className="text-sm text-gray-400">{signer.email}</p>
+                      <p className="font-medium">{signer.name || signer.email}</p>
+                      <p className="text-sm text-white/50">{signer.email}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -139,7 +142,7 @@ export default async function DocumentPage({ params }: { params: Promise<{ id: s
                     </span>
                     {signer.status === 'pending' && (
                       <button
-                        className="flex items-center gap-1 text-sm text-purple-400 hover:text-purple-300 transition-colors"
+                        className="flex items-center gap-1 text-sm text-purple-400 hover:text-purple-300 transition"
                         title="Kopiera signeringslänk"
                       >
                         <Copy className="h-4 w-4" />
@@ -155,26 +158,26 @@ export default async function DocumentPage({ params }: { params: Promise<{ id: s
         {/* Audit Log */}
         {auditLogs && auditLogs.length > 0 && (
           <div>
-            <h2 className="text-lg font-medium text-white mb-4">Aktivitetslogg</h2>
-            <div className="rounded-xl bg-gray-900/50 border border-gray-800 overflow-hidden">
-              <div className="divide-y divide-gray-800">
+            <h2 className="text-lg font-medium mb-4">Aktivitetslogg</h2>
+            <div className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden backdrop-blur-sm">
+              <div className="divide-y divide-white/10">
                 {auditLogs.map((log) => (
                   <div key={log.id} className="flex items-center gap-4 p-4">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-800">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10">
                       {log.action.includes('signed') ? (
                         <CheckCircle className="h-4 w-4 text-green-400" />
                       ) : (
-                        <Clock className="h-4 w-4 text-gray-400" />
+                        <Clock className="h-4 w-4 text-white/50" />
                       )}
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm text-white">
+                      <p className="text-sm">
                         {log.action === 'document_sent' && 'Dokument skickat för signering'}
                         {log.action === 'document_viewed' && 'Dokument visat'}
                         {log.action === 'document_signed' && 'Dokument signerat'}
                         {log.action === 'document_declined' && 'Signering avböjd'}
                       </p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-white/40">
                         {new Date(log.created_at).toLocaleString('sv-SE')}
                       </p>
                     </div>
@@ -192,7 +195,7 @@ export default async function DocumentPage({ params }: { params: Promise<{ id: s
               href={document.file_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-700 transition-colors"
+              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 px-6 py-3 font-medium text-white hover:opacity-90 transition"
             >
               <FileText className="h-5 w-5" />
               Ladda ner signerat dokument
